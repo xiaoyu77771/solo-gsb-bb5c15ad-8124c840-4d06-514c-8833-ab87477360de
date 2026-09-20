@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>话剧走位连续性检查</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="title-row">
+      <h1>🎭 话剧走位连续性检查</h1>
+      <span id="dirtyMark" class="dirty" title="有未保存的修改"></span>
+    </div>
+    <div class="play-bar">
+      <label>剧目</label>
+      <select id="playSelect"></select>
+      <button id="newPlayBtn" class="btn">新建剧目</button>
+      <button id="renamePlayBtn" class="btn">重命名</button>
+      <button id="deletePlayBtn" class="btn danger">删除剧目</button>
+      <span class="spacer"></span>
+      <button id="saveBtn" class="btn primary">保存全部</button>
+      <button id="checkBtn" class="btn primary">运行检查</button>
+      <a id="exportJson" class="btn" href="#" download>导出 JSON</a>
+      <a id="exportTxt" class="btn" href="#" download>导出报告</a>
+    </div>
+    <nav class="tabs">
+      <button class="tab active" data-tab="graph">① 舞台区域图</button>
+      <button class="tab" data-tab="scenes">② 场次与换场</button>
+      <button class="tab" data-tab="results">③ 检查结果</button>
+    </nav>
+  </header>
+
+  <main>
+    <div id="emptyState" class="empty hidden">
+      <p>还没有剧目。点击「新建剧目」开始，或重启服务载入示例。</p>
+    </div>
+
+    <!-- 舞台区域图 -->
+    <section id="tab-graph" class="tab-panel">
+      <div class="graph-layout">
+        <div class="stage-wrap">
+          <svg id="stageSvg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet"></svg>
+          <p class="hint">拖动节点调整布局；点击边可修改通行秒数（输入 0 删除该边）。修改后记得「保存全部」。</p>
+        </div>
+        <aside class="side-panel">
+          <h3>添加区域</h3>
+          <div class="row">
+            <input id="newAreaName" type="text" placeholder="区域名称，如：舞台左">
+            <button id="addAreaBtn" class="btn">添加</button>
+          </div>
+          <h3>区域列表</h3>
+          <ul id="areaList" class="item-list"></ul>
+          <h3>添加邻接边</h3>
+          <div class="row">
+            <select id="edgeFrom"></select>
+            <span>↔</span>
+            <select id="edgeTo"></select>
+          </div>
+          <div class="row">
+            <input id="edgeSeconds" type="number" min="0.5" step="0.5" value="5" title="通行秒数">
+            <span>秒</span>
+            <button id="addEdgeBtn" class="btn">添加边</button>
+          </div>
+          <h3>邻接边列表</h3>
+          <ul id="edgeList" class="item-list"></ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 场次与换场 -->
+    <section id="tab-scenes" class="tab-panel hidden">
+      <div class="scenes-layout">
+        <aside class="side-panel">
+          <h3>场次（按顺序）</h3>
+          <ul id="sceneList" class="item-list"></ul>
+          <div class="row">
+            <input id="newSceneName" type="text" placeholder="场次名称，如：第一幕">
+            <button id="addSceneBtn" class="btn">添加场次</button>
+          </div>
+        </aside>
+        <div class="transitions-wrap">
+          <h3>换场设置（相邻场次之间）</h3>
+          <div id="transitionList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 检查结果 -->
+    <section id="tab-results" class="tab-panel hidden">
+      <div class="row">
+        <button id="runCheckBtn2" class="btn primary">重新运行检查</button>
+        <span class="hint">运行前会自动保存当前修改。</span>
+      </div>
+      <div id="checkSummary"></div>
+      <div id="checkDetails"></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="app.js"></script>
+</body>
+</html>
